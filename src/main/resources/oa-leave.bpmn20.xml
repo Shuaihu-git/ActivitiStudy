@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="oa-leave" name="oa-leave" isExecutable="true">
+    <startEvent id="sid-2250b950-16b5-47f4-ba0d-1b6578759e19" name="开始事件">
+      <documentation>开始</documentation>
+    </startEvent>
+    <endEvent id="sid-05e32e4b-bf68-462d-bd29-65f88c054bd4" name="流程结束">
+      <documentation>流程结束</documentation>
+    </endEvent>
+    <userTask id="sid-d1ca3cb5-2939-446e-b632-354f60c7b695" name="经理审批"/>
+    <userTask id="sid-d069226f-faab-475c-9890-62df1f11c8d5" name="人事审批"/>
+    <parallelGateway id="sid-df19fd57-4765-4ff7-a562-0e718c777dde"/>
+    <userTask id="sid-47a931ef-e176-4d9d-8fb5-718d0b2f1a4a" name="CEO审批"/>
+    <userTask id="sid-3ed6e75c-eadd-4b85-81a6-6f0c790a7cb4" name="总经理审批"/>
+    <sequenceFlow id="sid-8b40cfb0-7521-42e9-b95c-16deecb9487e" sourceRef="sid-2250b950-16b5-47f4-ba0d-1b6578759e19" targetRef="sid-d1ca3cb5-2939-446e-b632-354f60c7b695"/>
+    <sequenceFlow id="sid-e1be5a57-365a-4a6a-94d7-e2c49d56c8ee" sourceRef="sid-d1ca3cb5-2939-446e-b632-354f60c7b695" targetRef="sid-d069226f-faab-475c-9890-62df1f11c8d5"/>
+    <sequenceFlow id="sid-18c3dfcb-1d20-4051-9c4f-9465defb8d5c" sourceRef="sid-d069226f-faab-475c-9890-62df1f11c8d5" targetRef="sid-df19fd57-4765-4ff7-a562-0e718c777dde"/>
+    <sequenceFlow id="sid-f310abaf-6a65-4676-ab74-9f5976c1d5ef" sourceRef="sid-df19fd57-4765-4ff7-a562-0e718c777dde" targetRef="sid-47a931ef-e176-4d9d-8fb5-718d0b2f1a4a">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
+    <sequenceFlow id="sid-075ddb5d-f9e2-4225-96af-c556b63c4a6b" sourceRef="sid-df19fd57-4765-4ff7-a562-0e718c777dde" targetRef="sid-3ed6e75c-eadd-4b85-81a6-6f0c790a7cb4">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
+    <sequenceFlow id="sid-1e82c493-bc42-4460-a376-d0fbc5a5b205" sourceRef="sid-47a931ef-e176-4d9d-8fb5-718d0b2f1a4a" targetRef="sid-05e32e4b-bf68-462d-bd29-65f88c054bd4"/>
+    <sequenceFlow id="sid-455dff2f-6509-4b24-9f92-706f5254c68a" sourceRef="sid-3ed6e75c-eadd-4b85-81a6-6f0c790a7cb4" targetRef="sid-05e32e4b-bf68-462d-bd29-65f88c054bd4"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_oa-leave">
+    <bpmndi:BPMNPlane bpmnElement="oa-leave" id="BPMNPlane_oa-leave">
+      <bpmndi:BPMNShape id="shape-04770140-1faa-44fc-90ea-5d1171473f1a" bpmnElement="sid-2250b950-16b5-47f4-ba0d-1b6578759e19">
+        <omgdc:Bounds x="-190.0" y="-15.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-92d8de3d-9563-4556-8a1a-f73c853b016c" bpmnElement="sid-05e32e4b-bf68-462d-bd29-65f88c054bd4">
+        <omgdc:Bounds x="395.0" y="-15.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-5bb5cef1-ce53-4b35-aed4-f0b226c5dd8f" bpmnElement="sid-d1ca3cb5-2939-446e-b632-354f60c7b695">
+        <omgdc:Bounds x="-105.0" y="-40.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="sid-26fcafbf-bb53-4534-a5bb-8411c866fa54" bpmnElement="sid-d069226f-faab-475c-9890-62df1f11c8d5">
+        <omgdc:Bounds x="16.25" y="-40.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-f3b74a59-8a5d-4403-830c-ad7227206a65" bpmnElement="sid-df19fd57-4765-4ff7-a562-0e718c777dde">
+        <omgdc:Bounds x="165.0" y="-20.0" width="40.0" height="40.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-edbd1505-e7a2-43f6-8093-f0c70b023d87" bpmnElement="sid-47a931ef-e176-4d9d-8fb5-718d0b2f1a4a">
+        <omgdc:Bounds x="240.0" y="-110.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-34bedc74-4d25-49b8-b7e0-9828e1a074e3" bpmnElement="sid-3ed6e75c-eadd-4b85-81a6-6f0c790a7cb4">
+        <omgdc:Bounds x="245.0" y="35.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-effd07a6-75f8-4ed7-b718-f181ece2fa24" bpmnElement="sid-8b40cfb0-7521-42e9-b95c-16deecb9487e">
+        <omgdi:waypoint x="-160.0" y="0.0"/>
+        <omgdi:waypoint x="-105.0" y="0.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-15293722-3763-4dc5-bbaf-a1b8f3a46d92" bpmnElement="sid-e1be5a57-365a-4a6a-94d7-e2c49d56c8ee">
+        <omgdi:waypoint x="-5.0" y="0.0"/>
+        <omgdi:waypoint x="16.25" y="0.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-99121846-85e5-4caa-9660-53529f7d690b" bpmnElement="sid-18c3dfcb-1d20-4051-9c4f-9465defb8d5c">
+        <omgdi:waypoint x="116.25" y="0.0"/>
+        <omgdi:waypoint x="165.0" y="0.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-4bd5b63b-84c2-43be-a31d-df3e530c3967" bpmnElement="sid-f310abaf-6a65-4676-ab74-9f5976c1d5ef">
+        <omgdi:waypoint x="205.0" y="0.0"/>
+        <omgdi:waypoint x="240.0" y="-50.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-082d40e9-379e-466d-a6a4-234611adf402" bpmnElement="sid-075ddb5d-f9e2-4225-96af-c556b63c4a6b">
+        <omgdi:waypoint x="185.0" y="20.0"/>
+        <omgdi:waypoint x="245.0" y="55.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-5c19deb2-15f0-42b7-8d65-1bdd7269e11d" bpmnElement="sid-1e82c493-bc42-4460-a376-d0fbc5a5b205">
+        <omgdi:waypoint x="340.0" y="-50.0"/>
+        <omgdi:waypoint x="395.0" y="-7.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-05673dfb-105a-4ef8-91c8-3818edcb66cc" bpmnElement="sid-455dff2f-6509-4b24-9f92-706f5254c68a">
+        <omgdi:waypoint x="345.0" y="55.0"/>
+        <omgdi:waypoint x="395.0" y="7.5"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
