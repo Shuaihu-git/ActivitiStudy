@@ -3,14 +3,12 @@ package com.atlucky.activitystudy;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngineConfiguration;
-import org.activiti.engine.ProcessEngines;
-import org.activiti.engine.RepositoryService;
+import org.activiti.engine.*;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
@@ -189,6 +187,19 @@ class ActivityStudyApplicationTests {
         for (Deployment deploy : deploys) {
             repositoryService.deleteDeployment(deploy.getId());
         }
+    }
+
+    /**
+     *发起流程
+     */
+    @Test
+    public void startProcess(){
+        ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = defaultProcessEngine.getRuntimeService();
+        ProcessInstance processInstance = runtimeService.startProcessInstanceById("oa-leave:1:10004");
+        log.info("{}",processInstance.getName());
+        log.info("{}",processInstance.getId());
+        log.info("{}",processInstance.getBusinessKey());
     }
 
 }
