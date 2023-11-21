@@ -8,6 +8,7 @@ import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.DeploymentQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
@@ -174,6 +175,19 @@ class ActivityStudyApplicationTests {
             log.info("{}",processDefinition.getName());
             log.info("{}",processDefinition.getKey());
             log.info("{}",processDefinition.getDeploymentId());
+        }
+    }
+
+    /**
+     *删除部署流程
+     */
+    @Test
+    public void testDeleteProcess(){
+        ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = defaultProcessEngine.getRepositoryService();
+        List<Deployment> deploys = repositoryService.createDeploymentQuery().list();
+        for (Deployment deploy : deploys) {
+            repositoryService.deleteDeployment(deploy.getId());
         }
     }
 
