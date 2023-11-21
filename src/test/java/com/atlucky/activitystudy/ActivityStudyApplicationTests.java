@@ -7,6 +7,9 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
@@ -14,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
 import java.time.Instant;
+import java.util.List;
 import java.util.zip.ZipInputStream;
 
 @SpringBootTest
@@ -61,6 +65,27 @@ class ActivityStudyApplicationTests {
         val deploy = repositoryService
                 .createDeployment()
                 .addClasspathResource("process/oa-leave.bpmn20.xml")
+                .name("请假流程")
+                .deploy();
+        log.info("{}",deploy.getId());
+        log.info("{}",deploy.getName());
+        log.info("{}",deploy.getKey());
+
+    }
+    /**
+     *通过XML、PNG路径去部署流程
+     */
+    @Test
+    public void deploymentProcessByXMLPNG(){
+        //1、获取流程引擎
+        ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+        //2、获取流程存储对象
+        RepositoryService repositoryService = defaultProcessEngine.getRepositoryService();
+        //3、部署流程
+        val deploy = repositoryService
+                .createDeployment()
+                .addClasspathResource("process/oa-leave.bpmn20.xml")
+                .addClasspathResource("process/oa-leave.png")
                 .name("请假流程")
                 .deploy();
         log.info("{}",deploy.getId());
@@ -126,6 +151,30 @@ class ActivityStudyApplicationTests {
         InputStream inputStream = defaultProcessDiagramGenerator.generateDiagram(bpmnModel, "endEvent", "宋体", "宋体");
         String imageName="image-"+ Instant.now().getEpochSecond()+".svg";
         FileUtils.copyInputStreamToFile(inputStream,new File("process/"+imageName));
+    }
+
+    /**
+     *查询流程定义和部署流程
+     */
+    @Test
+    public void testQueryDefinition(){
+        ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService service = defaultProcessEngine.getRepositoryService();
+        //流程部署流程查询
+        List<Deployment> deployments = service.createDeploymentQuery().list();
+        for (Deployment deploy : deployments) {
+            log.info("{}",deploy.getId());
+            log.info("{}",deploy.getName());
+            log.info("{}",deploy.getKey());
+        }
+        //流程定义查询
+        List<ProcessDefinition> processDefinitionList = service.createProcessDefinitionQuery().list();
+        for (ProcessDefinition processDefinition : processDefinitionList) {
+            log.info("{}",processDefinition.getId());
+            log.info("{}",processDefinition.getName());
+            log.info("{}",processDefinition.getKey());
+            log.info("{}",processDefinition.getDeploymentId());
+        }
     }
 
 }
