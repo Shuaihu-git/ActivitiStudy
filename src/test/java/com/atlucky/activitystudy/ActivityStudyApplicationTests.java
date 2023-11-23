@@ -68,8 +68,8 @@ class ActivityStudyApplicationTests {
         //3、部署流程
         val deploy = repositoryService
                 .createDeployment()
-                .addClasspathResource("process/grouper.bpmn20.xml")
-                .name("灵活待办人员审批")
+                .addClasspathResource("process/grouperProcess.bpmn20.xml")
+                .name("灵活待办人员审批请假流程")
                 .deploy();
         log.info("{}",deploy.getId());
         log.info("{}",deploy.getName());
@@ -150,9 +150,9 @@ class ActivityStudyApplicationTests {
     public void testGenerateSVG() throws IOException {
         ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
         RepositoryService repositoryService = defaultProcessEngine.getRepositoryService();
-        BpmnModel bpmnModel = repositoryService.getBpmnModel("用户角色控制流程:1:32503");
+        BpmnModel bpmnModel = repositoryService.getBpmnModel("grouperProcess:1:52503");
         DefaultProcessDiagramGenerator defaultProcessDiagramGenerator = new DefaultProcessDiagramGenerator();
-        InputStream inputStream = defaultProcessDiagramGenerator.generateDiagram(bpmnModel, "endEvent", "宋体", "宋体");
+        InputStream inputStream = defaultProcessDiagramGenerator.generateDiagram(bpmnModel, "endEvent1", "宋体", "宋体");
         String imageName="image-"+ Instant.now().getEpochSecond()+".svg";
         FileUtils.copyInputStreamToFile(inputStream,new File("process/"+imageName));
     }
@@ -203,7 +203,7 @@ class ActivityStudyApplicationTests {
         RuntimeService runtimeService = defaultProcessEngine.getRuntimeService();
         HashMap<String, Object> map = new HashMap<>(2);
         map.put("group","JavaC组组长王五");
-        ProcessInstance processInstance = runtimeService.startProcessInstanceById("grouper:1:40003",map);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceById("grouperProcess:1:52503");
         log.info("{}",processInstance.getName());
         log.info("{}",processInstance.getId());
         log.info("{}",processInstance.getBusinessKey());
@@ -221,6 +221,7 @@ class ActivityStudyApplicationTests {
             log.info("{}",task.getName());
             log.info("{}",task.getId());
             log.info("{}",task.getParentTaskId());
+            log.info("{}",task.getProcessInstanceId());
         }
     }
     /**
@@ -230,7 +231,7 @@ class ActivityStudyApplicationTests {
     public void queryTaskByAssignee(){
         ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
         TaskService taskService = engine.getTaskService();
-        List<Task> list = taskService.createTaskQuery().taskAssignee("JavaC组组长王五").active().list();
+        List<Task> list = taskService.createTaskQuery().taskAssignee("灵活待办人员审批请假流程-老六").active().list();
         for (Task task : list) {
             log.info("{}",task.getName());
             log.info("{}",task.getAssignee());
@@ -251,9 +252,11 @@ class ActivityStudyApplicationTests {
                 .singleResult();*/
         List<Task> list = taskService
                 .createTaskQuery()
-                .processDefinitionId("grouper:1:40003")
+                .processDefinitionId("grouperProcess:1:52503")
                 .list();
         for (Task task : list) {
+//            HashMap<String, Object> map = new HashMap<>(2);
+//            map.put("group","灵活待办人员审批请假流程-老六");
             taskService.complete(task.getId());
         }
 
