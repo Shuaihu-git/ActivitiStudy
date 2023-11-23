@@ -4,11 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
@@ -145,7 +149,7 @@ class ActivityStudyApplicationTests {
     public void testGenerateSVG() throws IOException {
         ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
         RepositoryService repositoryService = defaultProcessEngine.getRepositoryService();
-        BpmnModel bpmnModel = repositoryService.getBpmnModel("oa-leave:2:5004");
+        BpmnModel bpmnModel = repositoryService.getBpmnModel("oa-leave:1:10004");
         DefaultProcessDiagramGenerator defaultProcessDiagramGenerator = new DefaultProcessDiagramGenerator();
         InputStream inputStream = defaultProcessDiagramGenerator.generateDiagram(bpmnModel, "endEvent", "宋体", "宋体");
         String imageName="image-"+ Instant.now().getEpochSecond()+".svg";
@@ -201,5 +205,86 @@ class ActivityStudyApplicationTests {
         log.info("{}",processInstance.getId());
         log.info("{}",processInstance.getBusinessKey());
     }
+
+    /**
+     *查询任务
+     */
+    @Test
+    public void queryTask(){
+        ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
+        TaskService taskService = engine.getTaskService();
+        List<Task> list = taskService.createTaskQuery().list();
+        for (Task task : list) {
+            log.info("{}",task.getName());
+            log.info("{}",task.getId());
+            log.info("{}",task.getParentTaskId());
+        }
+    }
+
+    /**
+     *完成任务
+     */
+    @Test
+    public void completeTask(){
+        ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
+        TaskService taskService = engine.getTaskService();
+        Task task = taskService
+                .createTaskQuery()
+                .processInstanceId("12501")
+                .singleResult();
+        taskService.complete(task.getId());
+
+    }
+
+    /**
+     *查询历史流程实例
+     */
+    @Test
+    public void queryHistoryProcessInstance(){
+        ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = engine.getHistoryService();
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().list();
+        for (HistoricProcessInstance instance : list) {
+            log.info("instance.getId()={}",instance.getId());
+            log.info("instance.getName()={}",instance.getName());
+            log.info("instance.getProcessDefinitionId()={}",instance.getProcessDefinitionId());
+        }
+    }
+
+    /**
+     *查询历史任务
+     */
+    @Test
+    public void queryHistoryTaskInstance(){
+        ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = engine.getHistoryService();
+        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery().list();
+        for (HistoricTaskInstance instance : list) {
+            log.info("instance.getId()={}",instance.getId());
+            log.info("instance.instance.getName()={}",instance.getName());
+            log.info("instance.getProcessDefinitionId()={}",instance.getProcessDefinitionId());
+            log.info("instance.getStartTime()={}",instance.getStartTime());
+            log.info("instance.getEndTime()={}",instance.getEndTime());
+        }
+    }
+    /**
+     *查询历史活动
+     */
+    @Test
+    public void queryHistoryActivityInstance(){
+        ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
+        HistoryService historyService = engine.getHistoryService();
+        List<HistoricActivityInstance> list = historyService.createHistoricActivityInstanceQuery().list();
+        for (HistoricActivityInstance instance : list) {
+            log.info("instance.getId()={}",instance.getId());
+            log.info("instance.getActivityName()={}",instance.getActivityName());
+            log.info("instance.instance.getActivityType()={}",instance.getActivityType());
+            log.info("instance.getProcessDefinitionId()={}",instance.getProcessDefinitionId());
+            log.info("instance.getStartTime()={}",instance.getStartTime());
+            log.info("instance.getEndTime()={}",instance.getEndTime());
+        }
+    }
+
+
 
 }
