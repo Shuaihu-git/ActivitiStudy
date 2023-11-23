@@ -67,8 +67,8 @@ class ActivityStudyApplicationTests {
         //3、部署流程
         val deploy = repositoryService
                 .createDeployment()
-                .addClasspathResource("process/oa-leave.bpmn20.xml")
-                .name("请假流程")
+                .addClasspathResource("process/userRole.bpmn20.xml")
+                .name("用户角色控制流程")
                 .deploy();
         log.info("{}",deploy.getId());
         log.info("{}",deploy.getName());
@@ -87,9 +87,9 @@ class ActivityStudyApplicationTests {
         //3、部署流程
         val deploy = repositoryService
                 .createDeployment()
-                .addClasspathResource("process/oa-leave.bpmn20.xml")
-                .addClasspathResource("process/oa-leave.png")
-                .name("请假流程")
+                .addClasspathResource("process/test01.bpmn20.xml")
+                .addClasspathResource("process/简单流程.png")
+                .name("简单流程")
                 .deploy();
         log.info("{}",deploy.getId());
         log.info("{}",deploy.getName());
@@ -200,7 +200,7 @@ class ActivityStudyApplicationTests {
     public void startProcess(){
         ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
         RuntimeService runtimeService = defaultProcessEngine.getRuntimeService();
-        ProcessInstance processInstance = runtimeService.startProcessInstanceById("oa-leave:1:10004");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceById("用户角色控制流程:1:32503");
         log.info("{}",processInstance.getName());
         log.info("{}",processInstance.getId());
         log.info("{}",processInstance.getBusinessKey());
@@ -220,6 +220,19 @@ class ActivityStudyApplicationTests {
             log.info("{}",task.getParentTaskId());
         }
     }
+    /**
+     *通过人员查询待办任务
+     */
+    @Test
+    public void queryTaskByAssignee(){
+        ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
+        TaskService taskService = engine.getTaskService();
+        List<Task> list = taskService.createTaskQuery().taskAssignee("组长").active().list();
+        for (Task task : list) {
+            log.info("{}",task.getName());
+            log.info("{}",task.getAssignee());
+        }
+    }
 
     /**
      *完成任务
@@ -228,11 +241,18 @@ class ActivityStudyApplicationTests {
     public void completeTask(){
         ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
         TaskService taskService = engine.getTaskService();
-        Task task = taskService
+        /*Task task = taskService
                 .createTaskQuery()
-                .processInstanceId("12501")
-                .singleResult();
-        taskService.complete(task.getId());
+                .processDefinitionId("用户角色控制流程:1:32503")
+                .singleResult();*/
+        List<Task> list = taskService
+                .createTaskQuery()
+                .processDefinitionId("用户角色控制流程:1:32503")
+                .list();
+        for (Task task : list) {
+            taskService.complete(task.getId());
+        }
+
 
     }
 
