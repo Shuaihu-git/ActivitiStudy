@@ -93,13 +93,12 @@ public class ImageTest {
                 .orderByTaskCreateTime()
                 .desc()
                 .list();
-//        Task result = taskService.createTaskQuery().processInstanceId("65001").singleResult();
-//        System.out.println(result.getProcessInstanceId());
-//        System.out.println(result.getProcessDefinitionId());
-//        System.out.println(result.getId());
-//        System.out.println(result.getName());
-//        List<HistoricTaskInstance> historicTaskInstances = historyService.createHistoricTaskInstanceQuery().processInstanceId(result.).list();
-//        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(result.getProcessInstanceId()).singleResult();
+        Task result = taskService.createTaskQuery().processInstanceId("65001").singleResult();
+        System.out.println(result.getProcessInstanceId());
+        System.out.println(result.getProcessDefinitionId());
+        System.out.println(result.getId());
+        System.out.println(result.getName());
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(result.getProcessInstanceId()).singleResult();
 //
 //
 //
@@ -112,13 +111,12 @@ public class ImageTest {
 //        Task task = tasks.get(0);
         //执行中的
         HistoricActivityInstance historicActivityInstance = historyService.createHistoricActivityInstanceQuery().orderByHistoricActivityInstanceEndTime().desc().list().get(0);
-//        List<HistoricActivityInstance> historicActivityInstances = historyService.createHistoricActivityInstanceQuery().finished().list();
 
 
         List<String> lastTask =new ArrayList<>();
         lastTask.add(historicActivityInstance.getActivityId());
 
-        BpmnModel bpmnModel = repositoryService.getBpmnModel("grouperProcess:1:52503");
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(result.getProcessInstanceId());
         DefaultProcessDiagramGenerator defaultProcessDiagramGenerator = new DefaultProcessDiagramGenerator();
         /*
           七个参数分别是:
