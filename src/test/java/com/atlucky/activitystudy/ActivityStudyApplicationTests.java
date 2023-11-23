@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
@@ -67,8 +68,8 @@ class ActivityStudyApplicationTests {
         //3、部署流程
         val deploy = repositoryService
                 .createDeployment()
-                .addClasspathResource("process/userRole.bpmn20.xml")
-                .name("用户角色控制流程")
+                .addClasspathResource("process/grouper.bpmn20.xml")
+                .name("灵活待办人员审批")
                 .deploy();
         log.info("{}",deploy.getId());
         log.info("{}",deploy.getName());
@@ -149,7 +150,7 @@ class ActivityStudyApplicationTests {
     public void testGenerateSVG() throws IOException {
         ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
         RepositoryService repositoryService = defaultProcessEngine.getRepositoryService();
-        BpmnModel bpmnModel = repositoryService.getBpmnModel("oa-leave:1:10004");
+        BpmnModel bpmnModel = repositoryService.getBpmnModel("用户角色控制流程:1:32503");
         DefaultProcessDiagramGenerator defaultProcessDiagramGenerator = new DefaultProcessDiagramGenerator();
         InputStream inputStream = defaultProcessDiagramGenerator.generateDiagram(bpmnModel, "endEvent", "宋体", "宋体");
         String imageName="image-"+ Instant.now().getEpochSecond()+".svg";
@@ -200,7 +201,9 @@ class ActivityStudyApplicationTests {
     public void startProcess(){
         ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
         RuntimeService runtimeService = defaultProcessEngine.getRuntimeService();
-        ProcessInstance processInstance = runtimeService.startProcessInstanceById("用户角色控制流程:1:32503");
+        HashMap<String, Object> map = new HashMap<>(2);
+        map.put("group","JavaC组组长王五");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceById("grouper:1:40003",map);
         log.info("{}",processInstance.getName());
         log.info("{}",processInstance.getId());
         log.info("{}",processInstance.getBusinessKey());
@@ -227,10 +230,11 @@ class ActivityStudyApplicationTests {
     public void queryTaskByAssignee(){
         ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
         TaskService taskService = engine.getTaskService();
-        List<Task> list = taskService.createTaskQuery().taskAssignee("组长").active().list();
+        List<Task> list = taskService.createTaskQuery().taskAssignee("JavaC组组长王五").active().list();
         for (Task task : list) {
             log.info("{}",task.getName());
             log.info("{}",task.getAssignee());
+            log.info("{}",task.getProcessDefinitionId());
         }
     }
 
@@ -247,7 +251,7 @@ class ActivityStudyApplicationTests {
                 .singleResult();*/
         List<Task> list = taskService
                 .createTaskQuery()
-                .processDefinitionId("用户角色控制流程:1:32503")
+                .processDefinitionId("grouper:1:40003")
                 .list();
         for (Task task : list) {
             taskService.complete(task.getId());
