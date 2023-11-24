@@ -12,6 +12,7 @@ import org.activiti.engine.repository.DeploymentQuery;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.io.FileUtils;
@@ -201,9 +202,9 @@ class ActivityStudyApplicationTests {
     public void startProcess(){
         ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
         RuntimeService runtimeService = defaultProcessEngine.getRuntimeService();
-        HashMap<String, Object> map = new HashMap<>(2);
-        map.put("group","JavaC组组长王五");
-        ProcessInstance processInstance = runtimeService.startProcessInstanceById("grouperProcess:1:52503");
+//        HashMap<String, Object> map = new HashMap<>(2);
+//        map.put("group","JavaC组组长王五");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceById("grouperProcess:2:75003");
         log.info("{}",processInstance.getName());
         log.info("{}",processInstance.getId());
         log.info("{}",processInstance.getBusinessKey());
@@ -222,6 +223,20 @@ class ActivityStudyApplicationTests {
             log.info("{}",task.getId());
             log.info("{}",task.getParentTaskId());
             log.info("{}",task.getProcessInstanceId());
+            taskService.addComment(task.getId(),task.getProcessInstanceId(),"同意","备注意见");
+            taskService.addComment(task.getId(),task.getProcessInstanceId(),"同意");
+        }
+
+    }
+    @Test
+    public void getComment(){
+        ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+        TaskService taskService = defaultProcessEngine.getTaskService();
+        List<Comment> commentsByType = taskService.getCommentsByType("APPROVE.OK");
+        for (Comment comment : commentsByType) {
+            System.out.println("comment.getTaskId() = " + comment.getTaskId());
+            System.out.println("comment.getFullMessage() = " + comment.getFullMessage());
+            System.out.println("comment.getProcessInstanceId() = " + comment.getProcessInstanceId());
         }
     }
     /**
@@ -252,12 +267,17 @@ class ActivityStudyApplicationTests {
                 .singleResult();*/
         List<Task> list = taskService
                 .createTaskQuery()
-                .processDefinitionId("grouperProcess:1:52503")
+                .processDefinitionId("grouperProcess:2:75003")
                 .list();
         for (Task task : list) {
 //            HashMap<String, Object> map = new HashMap<>(2);
 //            map.put("group","灵活待办人员审批请假流程-老六");
+//            map.put("type","APPROVE.OK");
+//            map.put("comment","近期表现良好，准假");
+//            taskService.addComment(task.getId(), task.getProcessInstanceId(), map.get("type").toString(),map.get("comment").toString());
+//            taskService.complete(task.getId(),map);
             taskService.complete(task.getId());
+
         }
 
 
