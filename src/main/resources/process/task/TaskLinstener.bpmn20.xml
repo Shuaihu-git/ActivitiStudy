@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="TaskLinstener" name="TaskLinstener" isExecutable="true">
+    <documentation>TaskLinstener</documentation>
+    <startEvent id="startEvent1" name="开始除夕假期流程"></startEvent>
+    <endEvent id="sid-0FB144D8-73DC-4B00-92C1-6C5F9A4444F3" name="除夕假期流程审批结束"></endEvent>
+    <userTask id="sid-3C5A67E1-FFB4-40DF-879A-F8DE1D7076FE" name="人事审批">
+      <extensionElements>
+        <activiti:taskListener event="complete" class="com.atlucky.activitystudy.task.listener.HRTaskListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-3DDF0657-A8AC-4118-BB38-F44719AAE8F0" sourceRef="startEvent1" targetRef="sid-3C5A67E1-FFB4-40DF-879A-F8DE1D7076FE"></sequenceFlow>
+    <userTask id="sid-DD766E30-F37F-42E9-8BE4-EC878B4C4972" name="经理审批">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.atlucky.activitystudy.task.listener.PMTaskListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-301CEF6A-3341-45A6-B5D1-BE5B6FFEE6D8" sourceRef="sid-3C5A67E1-FFB4-40DF-879A-F8DE1D7076FE" targetRef="sid-DD766E30-F37F-42E9-8BE4-EC878B4C4972"></sequenceFlow>
+    <sequenceFlow id="sid-2F2850B0-7F1D-4E1B-A277-08A26CC331D2" sourceRef="sid-DD766E30-F37F-42E9-8BE4-EC878B4C4972" targetRef="sid-0FB144D8-73DC-4B00-92C1-6C5F9A4444F3"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_TaskLinstener">
+    <bpmndi:BPMNPlane bpmnElement="TaskLinstener" id="BPMNPlane_TaskLinstener">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="150.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-0FB144D8-73DC-4B00-92C1-6C5F9A4444F3" id="BPMNShape_sid-0FB144D8-73DC-4B00-92C1-6C5F9A4444F3">
+        <omgdc:Bounds height="28.0" width="28.0" x="765.0" y="164.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-3C5A67E1-FFB4-40DF-879A-F8DE1D7076FE" id="BPMNShape_sid-3C5A67E1-FFB4-40DF-879A-F8DE1D7076FE">
+        <omgdc:Bounds height="80.0" width="100.0" x="300.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-DD766E30-F37F-42E9-8BE4-EC878B4C4972" id="BPMNShape_sid-DD766E30-F37F-42E9-8BE4-EC878B4C4972">
+        <omgdc:Bounds height="80.0" width="100.0" x="555.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-301CEF6A-3341-45A6-B5D1-BE5B6FFEE6D8" id="BPMNEdge_sid-301CEF6A-3341-45A6-B5D1-BE5B6FFEE6D8">
+        <omgdi:waypoint x="400.0" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="555.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-2F2850B0-7F1D-4E1B-A277-08A26CC331D2" id="BPMNEdge_sid-2F2850B0-7F1D-4E1B-A277-08A26CC331D2">
+        <omgdi:waypoint x="655.0" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="765.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-3DDF0657-A8AC-4118-BB38-F44719AAE8F0" id="BPMNEdge_sid-3DDF0657-A8AC-4118-BB38-F44719AAE8F0">
+        <omgdi:waypoint x="180.0" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="300.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

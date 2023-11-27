@@ -8,9 +8,7 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.repository.DeploymentQuery;
 import org.activiti.engine.repository.ProcessDefinition;
-import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
@@ -21,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.*;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
@@ -256,6 +253,10 @@ class ActivityStudyApplicationTests {
             taskService.complete(task.getId());
         }
     }
+
+    /**
+     *获取备注信息
+     */
     @Test
     public void getComment(){
         ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
