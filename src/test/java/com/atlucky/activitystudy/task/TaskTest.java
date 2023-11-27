@@ -10,7 +10,9 @@ import org.activiti.engine.task.Task;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 2023/11/27 11:41
@@ -32,14 +34,26 @@ public class TaskTest {
         //3、部署流程
         val deploy = repositoryService
                 .createDeployment()
-                .addClasspathResource("process/task/ExcutionListener.bpmn20.xml")
-                .name("财务季报")
+                .addClasspathResource("process/task/VariableListener.bpmn20.xml")
+                .name("请年假流程")
                 .deploy();
         log.info("{}",deploy.getId());
         log.info("{}",deploy.getName());
         log.info("{}",deploy.getKey());
     }
 
+    /**
+     *删除部署流程
+     */
+    @Test
+    public void testDeleteProcess(){
+        ProcessEngine defaultProcessEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = defaultProcessEngine.getRepositoryService();
+        List<Deployment> deploys = repositoryService.createDeploymentQuery().list();
+        for (Deployment deploy : deploys) {
+            repositoryService.deleteDeployment(String.valueOf(122501),true);
+        }
+    }
     /**
      *查询部署流程
      */
@@ -72,7 +86,9 @@ public class TaskTest {
         RuntimeService runtimeService = defaultProcessEngine.getRuntimeService();
 //        HashMap<String, Object> map = new HashMap<>(2);
 //        map.put("group","JavaC组组长王五");
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("ExcutionListener");
+        Map<String, Object> map = new HashMap<>();
+        map.put("day",36);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("VariableListener",map);
         log.info("{}",processInstance.getName());
         log.info("{}",processInstance.getId());
         log.info("{}",processInstance.getBusinessKey());
@@ -109,7 +125,7 @@ public class TaskTest {
                 .singleResult();*/
         List<Task> list = taskService
                 .createTaskQuery()
-                .processDefinitionKey("ExcutionListener")
+                .processDefinitionKey("VariableListener")
                 .list();
         for (Task task : list) {
 //            HashMap<String, Object> map = new HashMap<>(2);
