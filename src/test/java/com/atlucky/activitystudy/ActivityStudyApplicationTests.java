@@ -69,8 +69,8 @@ class ActivityStudyApplicationTests {
         //3、部署流程
         val deploy = repositoryService
                 .createDeployment()
-                .addClasspathResource("process/grouperProcess.bpmn20.xml")
-                .name("灵活待办人员审批请假流程")
+                .addClasspathResource("process/claimTask.bpmn20.xml")
+                .name("候选人签收任务")
                 .deploy();
         log.info("{}",deploy.getId());
         log.info("{}",deploy.getName());
@@ -204,7 +204,7 @@ class ActivityStudyApplicationTests {
         RuntimeService runtimeService = defaultProcessEngine.getRuntimeService();
 //        HashMap<String, Object> map = new HashMap<>(2);
 //        map.put("group","JavaC组组长王五");
-        ProcessInstance processInstance = runtimeService.startProcessInstanceById("grouperProcess:2:75003");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceById("claimTask:1:92503");
         log.info("{}",processInstance.getName());
         log.info("{}",processInstance.getId());
         log.info("{}",processInstance.getBusinessKey());
@@ -223,10 +223,38 @@ class ActivityStudyApplicationTests {
             log.info("{}",task.getId());
             log.info("{}",task.getParentTaskId());
             log.info("{}",task.getProcessInstanceId());
-            taskService.addComment(task.getId(),task.getProcessInstanceId(),"同意","备注意见");
-            taskService.addComment(task.getId(),task.getProcessInstanceId(),"同意");
+            //taskService.addComment(task.getId(),task.getProcessInstanceId(),"同意","备注意见");
+            //taskService.addComment(task.getId(),task.getProcessInstanceId(),"同意");
         }
 
+    }
+
+    /**
+     *查询相关待办候选人的任务并完成任务
+     */
+    @Test
+    public void ClaimTask(){
+        ProcessEngine engine = ProcessEngines.getDefaultProcessEngine();
+        TaskService taskService = engine.getTaskService();
+        //查询候选人名下的任务
+        List<Task> list = taskService
+                .createTaskQuery()
+                //查询候选人名下的任务列表
+                //.taskCandidateUser("wanggang")
+                .taskAssignee("wanggang")
+                .list();
+        for (Task task : list) {
+            log.info("{}",task.getName());
+            log.info("{}",task.getId());
+            log.info("{}",task.getParentTaskId());
+            log.info("{}",task.getProcessInstanceId());
+            //taskService.addComment(task.getId(),task.getProcessInstanceId(),"同意","备注意见");
+            //taskService.addComment(task.getId(),task.getProcessInstanceId(),"同意");
+            //领取任务
+            //taskService.claim(task.getId(),"wanggang");
+            //完成任务
+            taskService.complete(task.getId());
+        }
     }
     @Test
     public void getComment(){
