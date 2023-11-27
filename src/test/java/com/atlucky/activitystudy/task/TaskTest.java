@@ -32,8 +32,8 @@ public class TaskTest {
         //3、部署流程
         val deploy = repositoryService
                 .createDeployment()
-                .addClasspathResource("process/task/TaskLinstener.bpmn20.xml")
-                .name("部署除夕请假流程")
+                .addClasspathResource("process/task/ExcutionListener.bpmn20.xml")
+                .name("财务季报")
                 .deploy();
         log.info("{}",deploy.getId());
         log.info("{}",deploy.getName());
@@ -72,7 +72,7 @@ public class TaskTest {
         RuntimeService runtimeService = defaultProcessEngine.getRuntimeService();
 //        HashMap<String, Object> map = new HashMap<>(2);
 //        map.put("group","JavaC组组长王五");
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("TaskLinstener");
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("ExcutionListener");
         log.info("{}",processInstance.getName());
         log.info("{}",processInstance.getId());
         log.info("{}",processInstance.getBusinessKey());
@@ -109,7 +109,7 @@ public class TaskTest {
                 .singleResult();*/
         List<Task> list = taskService
                 .createTaskQuery()
-                .processDefinitionKey("TaskLinstener")
+                .processDefinitionKey("ExcutionListener")
                 .list();
         for (Task task : list) {
 //            HashMap<String, Object> map = new HashMap<>(2);
